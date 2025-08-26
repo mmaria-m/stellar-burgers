@@ -8,6 +8,14 @@ interface OrderState {
   error: string | null;
 }
 
+export const getOrderByNumber = createAsyncThunk(
+  'order/getOrderByNumber',
+  async (data: number) => {
+    const res = await getOrderByNumberApi(data);
+    return res.orders.length > 0 ? res.orders[0] : null;
+  }
+);
+
 export const initialState: OrderState = {
   data: null,
   isLoading: false,
@@ -54,6 +62,22 @@ export const orderSlice = createSlice({
       .addCase(createOrder.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message || 'Ошибка создания заказа';
+      })
+      .addCase(getOrderByNumber.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(
+        getOrderByNumber.fulfilled,
+        (state, action: PayloadAction<TOrder | null>) => {
+          state.isLoading = false;
+          state.data = action.payload;
+          state.error = null;
+        }
+      )
+      .addCase(getOrderByNumber.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || 'Ошибка загрузки заказа';
       });
   },
   selectors: {

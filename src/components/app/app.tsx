@@ -13,7 +13,13 @@ import '../../index.css';
 import styles from './app.module.css';
 
 import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import {
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+  useMatch
+} from 'react-router-dom';
 import { ProtectedRoute } from '../protected-route/protected-route';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from '../../services/store';
@@ -27,6 +33,11 @@ const App = () => {
   const dispatch = useDispatch();
   const background = location.state?.background;
 
+  const feedMatch = useMatch('/feed/:number');
+  const profileOrderMatch = useMatch('/profile/orders/:number');
+  const orderNumber =
+    feedMatch?.params.number || profileOrderMatch?.params.number;
+
   const handleModalClose = () => {
     navigate(-1);
   };
@@ -36,13 +47,13 @@ const App = () => {
     dispatch(fetchAllIngredients());
   }, [dispatch]);
 
-  useEffect(() => {
-    dispatch(performAuthCheck()).then((action) => {
-      if (action.payload) {
-        dispatch(fetchProfileOrders());
-      }
-    });
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(performAuthCheck()).then((action) => {
+  //     if (action.payload) {
+  //       dispatch(fetchProfileOrders());
+  //     }
+  //   });
+  // }, [dispatch]);
 
   return (
     <div className={styles.app}>
@@ -101,7 +112,7 @@ const App = () => {
           }
         />
 
-        <Route path='/feed/:number' element={<OrderInfo />} />
+        {/* <Route path='/feed/:number' element={<OrderInfo />} />
         <Route
           path='/ingredients/:id'
           element={
@@ -112,7 +123,43 @@ const App = () => {
         />
         <Route path='/profile/orders/:number' element={<OrderInfo />} />
 
+         */}
         <Route path='*' element={<NotFound404 />} />
+        <Route
+          path='/ingredients/:id'
+          element={
+            <div className={styles.detailPageWrap}>
+              <h2
+                className={`text text_type_main-large ${styles.detailHeader}`}
+              >
+                Детали ингредиента
+              </h2>
+              <IngredientDetails />
+            </div>
+          }
+        />
+        <Route
+          path='/profile/orders/:number'
+          element={
+            <div className={styles.detailPageWrap}>
+              <h2
+                className={`text text_type_main-large ${styles.detailHeader}`}
+              >{`#${orderNumber}`}</h2>
+              <OrderInfo />
+            </div>
+          }
+        />
+        <Route
+          path='/feed/:number'
+          element={
+            <div className={styles.detailPageWrap}>
+              <h2
+                className={`text text_type_main-large ${styles.detailHeader}`}
+              >{`#${orderNumber}`}</h2>
+              <OrderInfo />
+            </div>
+          }
+        />
       </Routes>
 
       {background && (
@@ -120,7 +167,7 @@ const App = () => {
           <Route
             path='/feed/:number'
             element={
-              <Modal title='' onClose={handleModalClose}>
+              <Modal title={`#${orderNumber}`} onClose={handleModalClose}>
                 <OrderInfo />
               </Modal>
             }
@@ -136,7 +183,7 @@ const App = () => {
           <Route
             path='/profile/orders/:number'
             element={
-              <Modal title='' onClose={handleModalClose}>
+              <Modal title={`#${orderNumber}`} onClose={handleModalClose}>
                 <OrderInfo />
               </Modal>
             }

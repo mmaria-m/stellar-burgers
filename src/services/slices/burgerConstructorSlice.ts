@@ -1,5 +1,11 @@
-import { createSlice, PayloadAction, nanoid } from '@reduxjs/toolkit';
+import {
+  createSlice,
+  PayloadAction,
+  nanoid,
+  createSelector
+} from '@reduxjs/toolkit';
 import { TIngredient, TConstructorIngredient } from '@utils-types';
+import { RootState } from '../store';
 
 export interface BurgerConstructorState {
   selectedBun: TConstructorIngredient | null;
@@ -51,28 +57,35 @@ const burgerConstructorSlice = createSlice({
         ingredientsArray[fromIndex]
       ];
     }
-  },
-  selectors: {
-    selectBun: (state: BurgerConstructorState) => state.selectedBun,
-    selectConstructorIngredients: (state: BurgerConstructorState) =>
-      state.selectedIngredients,
-    selectConstructorItems: (state: BurgerConstructorState) => ({
-      bun: state.selectedBun,
-      ingredients: state.selectedIngredients
-    }),
-    selectIngredientsCount: (state: BurgerConstructorState) => {
-      const counts: { [key: string]: number } = {};
-      if (state.selectedBun) {
-        counts[state.selectedBun._id] = 2;
-      }
-      state.selectedIngredients.forEach((ingredient) => {
-        counts[ingredient._id] = (counts[ingredient._id] || 0) + 1;
-      });
-
-      return counts;
-    }
   }
 });
+
+export const selectBun = (state: RootState) =>
+  state.burgerConstructor.selectedBun;
+export const selectConstructorIngredients = (state: RootState) =>
+  state.burgerConstructor.selectedIngredients;
+
+export const selectConstructorItems = createSelector(
+  [selectBun, selectConstructorIngredients],
+  (bun, ingredients) => ({
+    bun,
+    ingredients
+  })
+);
+
+export const selectIngredientsCount = createSelector(
+  [selectBun, selectConstructorIngredients],
+  (bun, ingredients) => {
+    const counts: { [key: string]: number } = {};
+    if (bun) {
+      counts[bun._id] = 2;
+    }
+    ingredients.forEach((ingredient) => {
+      counts[ingredient._id] = (counts[ingredient._id] || 0) + 1;
+    });
+    return counts;
+  }
+);
 
 export const {
   addIngredientToConstructor,
@@ -80,12 +93,5 @@ export const {
   reorderConstructorIngredient,
   removeIngredientFromConstructor
 } = burgerConstructorSlice.actions;
-
-export const {
-  selectBun,
-  selectConstructorIngredients,
-  selectConstructorItems,
-  selectIngredientsCount
-} = burgerConstructorSlice.selectors;
 
 export default burgerConstructorSlice.reducer;
