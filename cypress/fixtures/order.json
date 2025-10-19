@@ -1,0 +1,17 @@
+{
+  "success": true,
+  "order": {
+    "_id": "test-id",
+    "status": "done",
+    "name": "Тест",
+    "createdAt": "2025-01-01T00:00:00.000Z",
+    "updatedAt": "2025-01-01T00:00:00.000Z",
+    "number": 12345,
+    "ingredients": [
+      "643d69a5c3f7b9001cfa093d",
+      "643d69a5c3f7b9001cfa093f",
+      "643d69a5c3f7b9001cfa093d"
+    ]
+  },
+  "name": "Тест"
+} 

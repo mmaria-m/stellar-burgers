@@ -21,7 +21,7 @@ export const rootReducer = combineSlices({
   profileOrders: profileOrdersReducer
 });
 
-const appStore = configureStore({
+export const appStore = configureStore({
   reducer: rootReducer,
   devTools: process.env.NODE_ENV !== 'production'
 });
