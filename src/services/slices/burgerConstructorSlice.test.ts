@@ -7,8 +7,8 @@ import constructorReducer, {
   addIngredientToConstructor,
   removeIngredientFromConstructor,
   clearConstructor,
-  reorderConstructorIngredient
-//   initialState
+  reorderConstructorIngredient,
+  initialState
 } from './burgerConstructorSlice';
 import { TIngredient, TConstructorIngredient } from '../../utils/types';
 
@@ -45,10 +45,10 @@ const mockMain: TIngredient = {
 };
 
 describe('Burger Constructor Slice', () => {
-  const initialState = {
-    selectedBun: null,
-    selectedIngredients: []
-  };
+  // const initialState = {
+  //   selectedBun: null,
+  //   selectedIngredients: []
+  // };
   // добавление булки
   describe('addIngredientToConstructor', () => {
 

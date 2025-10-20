@@ -1,12 +1,12 @@
-import ingredientsReducer, { fetchAllIngredients } from './ingredientsSlice';
+import ingredientsReducer, { fetchAllIngredients, initialState } from './ingredientsSlice';
 import { TIngredient } from '../../utils/types';
 
 describe('Ingredients Slice', () => {
-  const initialState = {
-    availableIngredients: [],
-    isLoading: false,
-    error: null
-  };
+  // const initialState = {
+  //   availableIngredients: [],
+  //   isLoading: false,
+  //   error: null
+  // };
 
     describe('fetchAllIngredients', () => {
     it('should handle pending state', () => {
